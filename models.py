@@ -336,7 +336,7 @@ class AgnesVideoProvider:
 
 # ==================== Provider 工厂 ====================
 
-def create_provider(model_config: ModelConfig) -> object:
+def create_provider(model_config: ModelConfig, api_key: str = "") -> object:
     """根据模型配置创建合适的 Provider"""
     if model_config.category == "image":
         return AgnesImageProvider()
@@ -344,13 +344,13 @@ def create_provider(model_config: ModelConfig) -> object:
         return AgnesVideoProvider()
     else:
         # 文本模型：优先 OpenRouter，降级到 Mock
-        openrouter = OpenRouterProvider()
+        openrouter = OpenRouterProvider(api_key=api_key)
         if openrouter.is_available:
             return openrouter
         return MockProvider()
 
 
-def get_running_mode() -> str:
+def get_running_mode(api_key: str = "") -> str:
     """获取当前运行模式"""
-    api_key = os.getenv("OPENROUTER_API_KEY", "")
-    return "live" if api_key else "mock"
+    key = api_key or os.getenv("OPENROUTER_API_KEY", "")
+    return "live" if key else "mock"
