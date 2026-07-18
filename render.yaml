@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: zhongshen-backend
+    runtime: docker
+    plan: free
+    envVars:
+      - key: OPENROUTER_API_KEY
+        value: ""
+    healthCheckPath: /api/health
